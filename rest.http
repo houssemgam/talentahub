@@ -1,0 +1,31 @@
+GET http://localhost:5002
+
+
+
+###Login Route
+POST  http://localhost:5002/auth/login 
+content-type: application/json
+
+{
+  
+  "email": "riadh.labidi@gmail.com",
+  "password": "12345678"
+}
+
+####Register Route
+POST  http://localhost:5002/auth/register
+Content-Type: application/json
+
+{
+  
+  "email": "riadh.labidi@gmail.com",
+  "password": "12345678"
+  
+}
+
+###Logout Route
+   http://localhost:5002/auth/logout
+
+
+   ###/users
+   http://localhost:5002/users
