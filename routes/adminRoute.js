@@ -1,22 +1,29 @@
 import express from 'express';
-import { createUser, getUser, updateUser, deleteUser, updateProfile } from '../Controller/adminController.js';
+import {
+  createUser,
+  updateUser,
+  deleteUser,
+  updateProfile,
+  authenticateUser,
+  approveTalent
+} from '../Controller/adminController.js';
+import { getUser } from '../Controller/adminController.js';
+
 
 const router = express.Router();
 
-// Créer un utilisateur
-router.post('/users', createUser);
+// Routes pour la gestion des utilisateurs
+router.post('/createUser', createUser);
+router.get('/getUser/:id', getUser);
 
-// Obtenir un utilisateur par son ID
-router.get('/users/:id', getUser);
+router.put('/updateUser/:id', updateUser);
 
-// Mettre à jour un utilisateur par son ID
-router.put('/users/:id', updateUser);
+router.delete('/deleteUser/:id', deleteUser);
 
-// Supprimer un utilisateur par son ID
-router.delete('/users/:id', deleteUser);
+// Route pour la mise à jour du profil de l'administrateur
+router.put('/profile/:id', authenticateUser, updateProfile);
 
-// Mettre à jour le profil de l'administrateur
-router.put('/profile/:id', updateProfile);
+// Route pour l'approbation des talents
+router.post('/approve-talent/:talentId', authenticateUser, approveTalent);
 
 export default router;
-

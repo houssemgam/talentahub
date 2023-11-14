@@ -10,10 +10,15 @@ export const getUser = async (req, res, next) => {
       return next(createError(404, 'Utilisateur non trouvé avec cet ID'));
     }
 
-    res.json({
-      status: 'success',
-      results: user
-    });
+    // Vérification si l'utilisateur accède à son propre profil
+    if (req.user._id === req.params.id) {
+      res.json({
+        status: 'success',
+        results: user
+      });
+    } else {
+      throw createError(401, 'Non autorisé');
+    }
   } catch (err) {
     next(err);
   }
@@ -21,8 +26,8 @@ export const getUser = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
   try {
-    // Vérification si l'utilisateur met à jour son propre profil
-    if (req.user._id === req.params.id) {
+    // Vérification si l'utilisateur est authentifié et si l'objet req.user est défini
+    if (req.user && req.user._id.toString() === req.params.id) {
       const user = await User.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true
@@ -67,42 +72,47 @@ export const deleteUser = async (req, res, next) => {
 
 export const updateProfile = async (req, res, next) => {
   try {
-    if (req.user.role !== req.params.role) {
-      return res.status(401).send('Non autorisé');
+    // Vérification si l'utilisateur est authentifié et si l'objet req.user est défini
+    if (req.user && req.user._id === req.params.id) {
+      // Reste du code pour la mise à jour du profil
+    } else {
+      throw createError(401, 'Non autorisé');
     }
-
-    // Reste du code
   } catch (err) {
     next(err);
   }
 };
 
 export const resetPassword = async (req, res, next) => {
-    try {
-      const { token, password } = req.body;
-  
-      // Recherchez l'utilisateur avec le jeton de réinitialisation
-      const user = await User.findOne({ resetPasswordToken: token });
-  
-      // Vérifiez si l'utilisateur existe et si le jeton n'a pas expiré
-      if (!user || user.resetPasswordExpires < Date.now()) {
-        return res.status(400).json({ message: 'Le jeton de réinitialisation est invalide ou a expiré.' });
-      }
-  
+  try {
+    const { token, password } = req.body;
+
+    // Recherchez l'utilisateur avec le jeton de réinitialisation
+    const user = await User.findOne({ resetPasswordToken: token });
+
+    // Vérifiez si l'utilisateur existe et si le jeton n'a pas expiré
+    if (!user || user.resetPasswordExpires < Date.now()) {
+      return res.status(400).json({ message: 'Le jeton de réinitialisation est invalide ou a expiré.' });
+    }
+
+    // Vérification si l'utilisateur met à jour son propre mot de passe
+    if (req.user._id === user._id) {
       // Générez un nouveau sel et hachez le nouveau mot de passe
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
-  
+
       // Mettez à jour le mot de passe de l'utilisateur
       user.password = hashedPassword;
       user.resetPasswordToken = undefined;
       user.resetPasswordExpires = undefined;
       await user.save();
-  
+
       return res.status(200).json({ message: 'Le mot de passe a été réinitialisé avec succès.' });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Une erreur s\'est produite lors de la réinitialisation du mot de passe.' });
+    } else {
+      throw createError(401, 'Non autorisé');
     }
-  };
-  
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Une erreur s\'est produite lors de la réinitialisation du mot de passe.' });
+  }
+};

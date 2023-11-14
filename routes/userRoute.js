@@ -1,18 +1,21 @@
 import express from 'express';
-import { checkUserRole } from '../Middlewares.js/Rolemiddleware.js';
-import * as userController from '../Controller/userController.js';
-import { resetPassword } from '../Controller/userController.js';
+import { getUser, updateUser, deleteUser, updateProfile, resetPassword } from '../Controller/userController.js';
 
 const router = express.Router();
 
-router.get('/users/:id', userController.getUser);
+// Route pour obtenir les informations d'un utilisateur
+router.get('/getUser/:id', getUser);
 
-router.put('/users/:id', checkUserRole('user'), userController.updateUser);
+// Route pour mettre à jour un utilisateur
+router.put('/updateUser/:id', updateUser);
 
-router.delete('/users/:id', checkUserRole('user'), userController.deleteUser); 
+// Route pour supprimer un utilisateur
+router.delete('/deleteUser/:id', deleteUser);
 
-router.patch('/users/:id', checkUserRole('user'), userController.updateProfile);
+// Route pour mettre à jour le profil d'un utilisateur
+router.put('/updateProfile/:id/profile', updateProfile);
 
+// Route pour réinitialiser le mot de passe d'un utilisateur
 router.post('/reset-password', resetPassword);
 
 export default router;

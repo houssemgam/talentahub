@@ -15,35 +15,39 @@ export const sendPasswordResetEmail = async (user) => {
   user.resetPasswordToken = resetToken;
   user.resetPasswordExpires = Date.now() + 3600000; // 1 heure d'expiration
 
-  await user.save();
+  try {
+    await user.save();
+  } catch (error) {
+    console.error(error);
+    throw new Error("Erreur lors de l'enregistrement du jeton de réinitialisation");
+  }
 
   // Envoyer l'email de réinitialisation
   const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
+    host: 'smtp.example.com', // Remplacez par le serveur SMTP approprié
     port: 587,
     secure: false,
     auth: {
-      user: 'votre-email@gmail.com',
-      pass: 'votre-mot-de-passe',
+      user: 'riadhlabidi690@gmail.com', // Remplacez par votre adresse email
+      pass: 'riadh12345', // Remplacez par votre mot de passe
     }
   });
 
   const mailOptions = {
-    from: 'votre@email.com',
+    from: 'riadhlabidi690@gmail.com', // Remplacez par votre adresse email
     to: user.email,
     subject: 'Réinitialisation du mot de passe',
     text: 'Voici votre lien de réinitialisation de mot de passe : ' + resetToken,
   };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log('Email envoyé : ' + info.response);
-    }
-  });
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email envoyé : ' + info.response);
+  } catch (error) {
+    console.error(error);
+    throw new Error("Erreur lors de l'envoi de l'email de réinitialisation");
+  }
 };
-
 export const resetPassword = async (req, res) => {
   try {
     const { token, password } = req.body;

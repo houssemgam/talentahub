@@ -1,12 +1,9 @@
 import User from '../Models/Usermodel.js';
+import Talent from '../Models/Talentmodel.js';
 import createError from 'http-errors';
 
 export const createUser = async (req, res, next) => {
   try {
-    if (req.user.role !== 'admin') {
-      throw createError(401, "Accès réservé à l'administrateur");
-    }
-
     const newUser = await User.create(req.body);
     res.status(201).json({
       status: 'success',
@@ -38,8 +35,8 @@ export const getUser = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
   try {
-    // Vérification si l'utilisateur met à jour son propre profil
-    if (req.user._id === req.params.id && req.user.role === 'admin') {
+    // Checking if the user is updating their own profile
+    if (req.user._id === req.params.id) {
       const user = await User.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true
@@ -60,6 +57,7 @@ export const updateUser = async (req, res, next) => {
     next(err);
   }
 };
+
 
 export const deleteUser = async (req, res, next) => {
   try {
@@ -102,3 +100,38 @@ export const updateProfile = async (req, res, next) => {
   }
 };
 
+export const authenticateUser = (req, res, next) => {
+  // Vérifiez ici si l'utilisateur est authentifié et s'il a le rôle d'administrateur
+  // Vous pouvez utiliser des mécanismes d'authentification tels que JWT, sessions, ou tout autre mécanisme de votre choix
+
+  if (req.user && req.user.role === 'admin') {
+    // L'utilisateur est authentifié et est un administrateur
+    next();
+  } else {
+    // L'utilisateur n'est pas authentifié ou n'a pas le rôle d'administrateur
+    return res.status(401).json({ message: 'Non autorisé' });
+  }
+};
+
+export const approveTalent = async (req, res, next) => {
+  try {
+    const { talentId } = req.params;
+
+    // Vérifiez si l'utilisateur est un administrateur en appelant la fonction d'authentification
+    authenticateUser(req, res, async () => { // Ajoutez le mot-clé async ici
+      // Mettez à jour le champ "approved" dans le modèle Talent pour le talent correspondant
+      const talent = await Talent.findByIdAndUpdate(talentId, { approved: true });
+
+      if (!talent) {
+        return next(createError(404, 'Talent non trouvé avec cet identifiant'));
+      }
+
+      res.json({
+        status: 'success',
+        talent
+      });
+    });
+  } catch (err) {
+    next(err);
+  }
+};

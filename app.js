@@ -4,45 +4,59 @@ import session from 'express-session';
 import authRoute from './routes/authRoute.js';
 import adminRoute from './routes/adminRoute.js'; 
 import userRoute from './routes/userRoute.js';
+import talentRoute from './routes/talentRoute.js';
 import connectDB from './database/db.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocs from './swagger.json' assert { type: 'json' };
+import fetch from 'node-fetch';
 
 const app = express();
 
-// Middleware pour parser les requêtes JSON
-app.use(bodyParser.json()); 
+app.use(bodyParser.json());
 
-// Configuration de express-session
 app.use(session({
-    secret: 'votre_clé_secrète',
+    secret: 'your_secret_key',
     resave: false,
     saveUninitialized: true
 }));
 
-// Routes d'authentification
+
+
 app.use('/auth', authRoute);
-
-// Routes administrateur  
-//app.use('/admin', adminRoute);
-app.use('/users', adminRoute);
-
-// Routes utilisateur
+app.use('/admin', adminRoute);
 app.use('/user', userRoute);
+app.use('/talent', talentRoute); // Add talentRoute
 
-// Middleware Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.get('/', (req, res) => {
-    res.send('Bienvenue sur l\'application');
+    res.send('Welcome to the application');
 });
 
-// Port d'écoute
+const fetchSwaggerData = async () => {
+    try {
+      const response = await fetch('http://localhost:5002', {
+        mode: 'cors',
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+      } else {
+        const errorText = await response.text();
+        throw new Error(`Error fetching Swagger data: ${errorText}`);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+};
+
+
+
 const port = process.env.PORT || 5002;
 
-// Démarrer le serveur
 app.listen(port, () => {
-    console.log(`Serveur démarré sur le port ${port}`);
+    console.log(`Server started on port ${port}`);
 });
 
 connectDB();

@@ -1,56 +1,94 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-      "title": "Mon API",
-      "description": "Documentation de mon API",
-      "version": "1.0.0"
-    },
-    "servers": [
-      {
-        "url": "http://localhost:5002"
-      }
-    ],
-    "paths": {
-        "/users": {
-          "post": {
-            "summary": "Créer un nouvel utilisateur",
-            "tags": ["Utilisateurs"],
-            "requestBody": {
-              "required": true,
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      
-                      "email": {
-                        "type": "string",
-                        "format": "email"
-                      },
-                      "password": {
-                        "type": "string"
-                      }
-                    },
-                    "required": ["email", "password"]
-                  }
+  "openapi": "3.0.0",
+  "info": {
+    "title": "User API",
+    "description": "API de gestion des utilisateurs",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5002"
+    }
+  ],
+  
+  
+  "paths": {
+    "/talent/getTalent/{id}": {
+      "get": {
+        "summary": "Obtenir les informations d'un talent",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Identifiant du talent",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Informations du talent récupérées avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Talent"
                 }
               }
-            },
-            "responses": {
-              "201": {
-                "description": "Utilisateur créé avec succès"
-              },
-              "400": {
-                "description": "Requête invalide"
-              },
-              "401": {
-                "description": "Non autorisé"
-              },
-              "500": {
-                "description": "Erreur interne du serveur"
+            }
+          },
+          "401": {
+            "description": "Non autorisé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Talent non trouvé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erreur interne du serveur",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
               }
             }
           }
         }
       }
     }
+  },
+  "components": {
+    "schemas": {
+      "Talent": {
+        "type": "object",
+        "properties": {
+          
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Message d'erreur"
+          }
+        }
+      }
+    }
+  }
+}
