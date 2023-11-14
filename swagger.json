@@ -13,7 +13,7 @@
   
   
   "paths": {
-    "/talent/getTalent/{id}": {
+    "/talent/{id}": {
       "get": {
         "summary": "Obtenir les informations d'un talent",
         "parameters": [
