@@ -1,0 +1,37 @@
+R_DEF: Internal format may change without notice
+local
+color black
+color white
+drawable button_backround
+drawable container_background
+drawable filter_background
+drawable ic_launcher_background
+drawable ic_launcher_foreground
+id bookNowButton
+id buttonHello
+id container
+id custom_title
+id eventDescription
+id eventImage
+id eventLocation
+id eventTitle
+id filterRecyclerView
+id imageViewBackground
+id recyclerView
+id textButtonLinearLayout
+id textLinearLayout
+id textViewFilter
+id textViewLocation
+id textViewTitle
+id toolbar
+layout activity_details_event
+layout activity_main
+layout filter_event
+layout item_event
+mipmap ic_launcher
+mipmap ic_launcher_round
+string app_name
+style Base.Theme.Talentahub
+style Theme.Talentahub
+xml backup_rules
+xml data_extraction_rules
