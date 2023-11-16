@@ -9,19 +9,34 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="51b90675-7d3b-4e32-a6e6-94c3fe5e5c3d" name="Changes" comment="" />
+    <list default="true" id="fd48729f-e4c4-4c41-86dc-1b13353d2ca6" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\starinfo\.android\avd\Resizable_Experimental_API_34.avd]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\jasse\.android\avd\Pixel_3a_API_24.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
   </component>
-  <component name="ProjectId" id="2YE8xTijYSrKQBQXpeVtYRCcDK8" />
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="layoutResourceFile" />
+        <option value="resourceFile" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectId" id="2Y8n243YjuBLUI6G8a82lBbZsoD" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -31,13 +46,15 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
+    "android-custom-viewC:/Users/jasse/AppData/Local/Android/Sdk/sources/android-33/android/widget/Button.java_SELECTED": "Button",
+    "android.gradle.sync.needed": "true",
     "cidr.known.project.marker": "true",
-    "last_opened_file_path": "D:/interface/talentahub"
+    "last_opened_file_path": "C:/Users/jasse/AndroidStudioProjects/Gestiontalents"
   }
 }]]></component>
   <component name="RunManager">
     <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App">
-      <module name="talentahub.app.main" />
+      <module name="front.app.main" />
       <option name="DEPLOY" value="true" />
       <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
       <option name="DEPLOY_AS_INSTANT" value="false" />
@@ -106,11 +123,11 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="51b90675-7d3b-4e32-a6e6-94c3fe5e5c3d" name="Changes" comment="" />
-      <created>1700079624846</created>
+      <changelist id="fd48729f-e4c4-4c41-86dc-1b13353d2ca6" name="Changes" comment="" />
+      <created>1699915863662</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1700079624846</updated>
+      <updated>1699915863662</updated>
     </task>
     <servers />
   </component>
