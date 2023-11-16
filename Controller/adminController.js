@@ -135,3 +135,76 @@ export const approveTalent = async (req, res, next) => {
     next(err);
   }
 };
+
+// Créer un utilisateur talent
+export const createTalentUser = async (req, res, next) => {
+  try {
+    const newTalentUser = await Talent.create(req.body); // Utilisation du modèle Talent pour créer un utilisateur talent
+    res.status(201).json({
+      status: 'success',
+      data: {
+        user: newTalentUser
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Récupérer un utilisateur talent par son identifiant
+export const getTalentUser = async (req, res, next) => {
+  try {
+    const talentUser = await Talent.findById(req.params.id); // Utilisation du modèle Talent pour récupérer un utilisateur talent
+
+    if (!talentUser) {
+      return next(createError(404, 'Utilisateur talent non trouvé avec cet identifiant'));
+    }
+
+    res.json({
+      status: 'success',
+      results: talentUser
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Mettre à jour un utilisateur talent
+export const updateTalentUser = async (req, res, next) => {
+  try {
+    const talentUser = await Talent.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true
+    }); // Utilisation du modèle Talent pour mettre à jour un utilisateur talent
+
+    if (!talentUser) {
+      return next(createError(404, 'Utilisateur talent non trouvé avec cet identifiant'));
+    }
+
+    res.json({
+      status: 'success',
+      talentUser
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Supprimer un utilisateur talent
+export const deleteTalentUser = async (req, res, next) => {
+  try {
+    const deletedTalentUser = await Talent.findByIdAndDelete(req.params.id); // Utilisation du modèle Talent pour supprimer un utilisateur talent
+
+    if (!deletedTalentUser) {
+      return next(createError(404, 'Utilisateur talent non trouvé avec cet identifiant'));
+    }
+
+    res.status(204).json({
+      status: 'success'
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// ...

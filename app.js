@@ -5,6 +5,7 @@ import authRoute from './routes/authRoute.js';
 import adminRoute from './routes/adminRoute.js'; 
 import userRoute from './routes/userRoute.js';
 import talentRoute from './routes/talentRoute.js';
+import { soumettreDemande, demanderChangementRole, accepterChangementRole, refuserChangementRole } from './Controller/demandechangeroleController.js';
 import connectDB from './database/db.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocs from './swagger.json' assert { type: 'json' };
@@ -20,19 +21,22 @@ app.use(session({
     saveUninitialized: true
 }));
 
-
-
+// Routes
 app.use('/auth', authRoute);
 app.use('/admin', adminRoute);
 app.use('/user', userRoute);
-app.use('/talent', talentRoute); // Add talentRoute
+app.use('/talent', talentRoute);
+app.use('/demandechangementrole', soumettreDemande, demanderChangementRole, accepterChangementRole, refuserChangementRole); // Utilisez les fonctions middleware individuelles
 
+// Swagger API documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
+// Default route
 app.get('/', (req, res) => {
     res.send('Welcome to the application');
 });
 
+// Fetch Swagger data
 const fetchSwaggerData = async () => {
     try {
       const response = await fetch('http://localhost:5002', {
@@ -51,12 +55,12 @@ const fetchSwaggerData = async () => {
     }
 };
 
-
-
+// Server setup
 const port = process.env.PORT || 5002;
 
 app.listen(port, () => {
     console.log(`Server started on port ${port}`);
 });
 
+// Connect to database
 connectDB();

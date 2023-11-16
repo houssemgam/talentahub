@@ -13,7 +13,7 @@ router.put('/updateUser/:id', updateUser);
 router.delete('/deleteUser/:id', deleteUser);
 
 // Route pour mettre à jour le profil d'un utilisateur
-router.put('/updateProfile/:id/profile', updateProfile);
+router.put('/updateProfile/:id', updateProfile);
 
 // Route pour réinitialiser le mot de passe d'un utilisateur
 router.post('/reset-password', resetPassword);

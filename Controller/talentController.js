@@ -1,84 +1,87 @@
 import Talent from '../Models/Talentmodel.js';
 import createError from 'http-errors';
-import bcrypt from 'bcrypt';
 
-export const getTalent = async (req, res, next) => {
+// Afficher le profil du talent
+export const getTalentProfile = async (req, res, next) => {
   try {
-    const talent = await Talent.findById(req.params.id);
+    if (!req.user || !req.user._id) {
+      return next(createError(403, 'Accès refusé'));
+    }
 
+    const talentUser = await Talent.findById(req.params.id);
+
+    if (!talentUser) {
+      return next(createError(404, 'Utilisateur talent non trouvé avec cet identifiant'));
+    }
+
+    // Vérifier si l'utilisateur est le propriétaire du compte
+    if (talentUser.user.toString() !== req.user._id.toString()) {
+      return next(createError(403, 'Accès refusé'));
+    }
+
+    res.json({
+      status: 'success',
+      results: talentUser
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateTalentProfile = async (req, res, next) => {
+  try {
+    const talentId = req.params.id;
+    const talentUser = await Talent.findByIdAndUpdate(talentId, req.body, {
+      new: true,
+      runValidators: true
+    });
+
+    if (!talentUser) {
+      const error = createError(404, 'Profil talent non trouvé');
+      return next(error);
+    }
+
+    // Vérifier si l'utilisateur est le propriétaire du compte
+    if (!req.user || !req.user._id || talentUser.user.toString() !== req.user._id.toString()) {
+      return next(createError(403, 'Accès refusé'));
+    }
+
+    res.json({
+      status: 'success',
+      results: talentUser
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+
+export const deleteTalentProfile = async (req, res, next) => {
+  try {
+    const talentId = req.params.id;
+    const talent = await Talent.findById(talentId);
+
+    // Vérifier si le profil talent existe
     if (!talent) {
-      return next(createError(404, 'Talent not found with this ID'));
+      return next(createError(404, 'Profil talent non trouvé'));
     }
 
-    // Check if the talent is accessing their own profile
-    if (req.user._id === req.params.id) {
-      res.json({
-        status: 'success',
-        results: talent
-      });
-    } else {
-      throw createError(401, 'Unauthorized');
+    // Vérifier si l'utilisateur est le propriétaire du compte
+    if (talent.user.toString() !== req.user._id.toString()) {
+      return next(createError(403, 'Accès refusé'));
     }
+
+    // Supprimer le profil de talent
+    await Talent.findByIdAndDelete(talentId);
+
+    res.status(204).json({
+      status: 'success'
+    });
   } catch (err) {
     next(err);
   }
 };
 
-export const updateTalent = async (req, res, next) => {
-  try {
-    // Check if the talent is updating their own profile
-    if (req.user._id === req.params.id) {
-      const talent = await Talent.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        runValidators: true
-      });
 
-      if (!talent) {
-        return next(createError(404, 'Talent not found with this ID'));
-      }
 
-      res.json({
-        status: 'success',
-        talent
-      });
-    } else {
-      throw createError(401, 'Unauthorized');
-    }
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const deleteTalent = async (req, res, next) => {
-  try {
-    // Check if the talent is deleting their own profile
-    if (req.user._id === req.params.id) {
-      const deletedTalent = await Talent.findByIdAndDelete(req.params.id);
-
-      if (!deletedTalent) {
-        return next(createError(404, 'Talent not found with this ID'));
-      }
-
-      res.status(204).json({
-        status: 'success'
-      });
-    } else {
-      throw createError(401, 'Unauthorized');
-    }
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const updateProfile = async (req, res, next) => {
-  try {
-    // Check if the talent is updating their own profile
-    if (req.user._id === req.params.id) {
-      // Rest of the code for updating the profile
-    } else {
-      throw createError(401, 'Unauthorized');
-    }
-  } catch (err) {
-    next(err);
-  }
-};

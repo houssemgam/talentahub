@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 
 const userSchema = new mongoose.Schema({
-  
   email: {
     type: String,
     required: [true, 'Une adresse e-mail doit être fournie'],
@@ -23,7 +22,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'admin'],
+    enum: ['user', 'admin', 'talent'],
     default: 'user'
   },
   resetPassword: {

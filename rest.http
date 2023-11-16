@@ -8,8 +8,9 @@ content-type: application/json
 
 {
   
-  "email": "riadh.labidi@gmail.com",
+  "email": "Laabidi.ryadh@esprit.tn",
   "password": "12345678"
+  
 }
 
 ####Register Route
@@ -18,7 +19,7 @@ Content-Type: application/json
 
 {
   
-  "email": "riadh.labidi@gmail.com",
+  "email": "Laabidi.zeineb@esprit.tn",
   "password": "12345678"
   
 }
@@ -27,5 +28,8 @@ Content-Type: application/json
    http://localhost:5002/auth/logout
 
 
-   ###/users
-   http://localhost:5002/users
+
+   
+   
+
+

@@ -2,6 +2,9 @@ import User from '../Models/Usermodel.js';
 import createError from 'http-errors';
 import bcrypt from 'bcrypt';
 
+
+
+
 export const getUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id);
@@ -10,12 +13,27 @@ export const getUser = async (req, res, next) => {
       return next(createError(404, 'Utilisateur non trouvé avec cet ID'));
     }
 
-    // Vérification si l'utilisateur accède à son propre profil
-    if (req.user._id === req.params.id) {
-      res.json({
-        status: 'success',
-        results: user
-      });
+    // Vérification du rôle de l'utilisateur
+    if (req.user && req.user._id && req.user._id.toString() === req.params.id) {
+      // Vérification du rôle de l'utilisateur
+      if (req.user.role === 'admin') {
+        // Si l'utilisateur est un administrateur, il peut accéder à tous les profils
+        res.json({
+          status: 'success',
+          results: user
+        });
+      } else {
+        // Si l'utilisateur n'est pas un administrateur, il ne peut accéder qu'à son propre profil
+        res.json({
+          status: 'success',
+          results: {
+            _id: user._id,
+            username: user.username,
+            email: user.email
+            // Ajoutez d'autres propriétés spécifiques au profil que vous souhaitez afficher
+          }
+        });
+      }
     } else {
       throw createError(401, 'Non autorisé');
     }
@@ -23,6 +41,8 @@ export const getUser = async (req, res, next) => {
     next(err);
   }
 };
+
+
 
 export const updateUser = async (req, res, next) => {
   try {
@@ -51,8 +71,8 @@ export const updateUser = async (req, res, next) => {
 
 export const deleteUser = async (req, res, next) => {
   try {
-    // Vérification si l'utilisateur supprime son propre profil
-    if (req.user._id === req.params.id) {
+    // Vérification si l'utilisateur supprime son propre profil ou s'il a le rôle d'administrateur
+    if ((req.user && req.user._id === req.params.id) || (req.user && req.user.role === 'admin')) {
       const deletedUser = await User.findByIdAndDelete(req.params.id);
 
       if (!deletedUser) {
@@ -74,7 +94,16 @@ export const updateProfile = async (req, res, next) => {
   try {
     // Vérification si l'utilisateur est authentifié et si l'objet req.user est défini
     if (req.user && req.user._id === req.params.id) {
-      // Reste du code pour la mise à jour du profil
+      const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+
+      if (!updatedUser) {
+        throw createError(404, 'Utilisateur non trouvé avec cet ID');
+      }
+
+      res.status(200).json({
+        status: 'success',
+        data: updatedUser
+      });
     } else {
       throw createError(401, 'Non autorisé');
     }

@@ -7,6 +7,12 @@ import {
   authenticateUser,
   approveTalent
 } from '../Controller/adminController.js';
+import {
+  createTalentUser,
+  getTalentUser,
+  updateTalentUser,
+  deleteTalentUser
+} from '../Controller/adminController.js';
 import { getUser } from '../Controller/adminController.js';
 
 
@@ -25,5 +31,19 @@ router.put('/profile/:id', authenticateUser, updateProfile);
 
 // Route pour l'approbation des talents
 router.post('/approve-talent/:talentId', authenticateUser, approveTalent);
+
+// Créer un utilisateur talent
+router.post('/createTalentUser', createTalentUser);
+
+// Récupérer un utilisateur talent par son identifiant
+router.get('/getTalentUser/:id', getTalentUser);
+
+// Mettre à jour un utilisateur talent
+router.put('/updateTalentUser/:id', updateTalentUser);
+
+// Supprimer un utilisateur talent
+router.delete('/talent/:id', deleteTalentUser);
+
+
 
 export default router;

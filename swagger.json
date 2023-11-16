@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "User API",
-    "description": "API de gestion des utilisateurs",
+    "title": "API Talent",
+    "description": "API de gestion des talents",
     "version": "1.0.0"
   },
   "servers": [
@@ -13,60 +13,25 @@
   
   
   "paths": {
-    "/talent/{id}": {
-      "get": {
-        "summary": "Obtenir les informations d'un talent",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "Identifiant du talent",
-            "schema": {
-              "type": "string"
+    "/demandechangementrole/soumettreDemande": {
+      "post": {
+        "summary": "Soumettre une demande de changement de rôle",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TalentRequest"
+              }
             }
           }
-        ],
+        },
         "responses": {
-          "200": {
-            "description": "Informations du talent récupérées avec succès",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Talent"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Non autorisé",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Talent non trouvé",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
+          "201": {
+            "description": "Demande soumise avec succès"
           },
           "500": {
-            "description": "Erreur interne du serveur",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
+            "description": "Erreur lors de la soumission de la demande"
           }
         }
       }
@@ -74,18 +39,33 @@
   },
   "components": {
     "schemas": {
-      "Talent": {
+      "TalentRequest": {
         "type": "object",
         "properties": {
-          
-        }
-      },
-      "Error": {
-        "type": "object",
-        "properties": {
-          "message": {
+          "skills": {
             "type": "string",
-            "description": "Message d'erreur"
+            "description": "Compétences du talent"
+          },
+          "experience": {
+            "type": "string",
+            "description": "Expérience du talent"
+          },
+          "email": {
+            "type": "string",
+            "description": "Adresse e-mail du talent"
+          },
+          "password": {
+            "type": "string",
+            "description": "Mot de passe du talent"
+          },
+          "user": {
+            "type": "string",
+            "required": false
+          },
+          "recipient": {
+            "type": "string",
+            "format": "ObjectId",
+            "description": "Identifiant du destinataire de la notification"
           }
         }
       }

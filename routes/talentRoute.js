@@ -1,18 +1,19 @@
 import express from 'express';
-import { getTalent, updateTalent, deleteTalent, updateProfile } from '../Controller/talentController.js';
+import {
+  getTalentProfile,
+  updateTalentProfile,
+  deleteTalentProfile
+} from '../Controller/talentController.js';
 
 const router = express.Router();
 
-// Get talent profile
-router.get('/:id', getTalent);
+// Route pour afficher le profil du talent
+router.get('/getTalentProfile/:id', getTalentProfile);
 
-// Update talent profile
-router.put('/:id', updateTalent);
+// Route pour mettre à jour le profil du talent
+router.put('/updateTalentProfile/:id', updateTalentProfile);
 
-// Delete talent profile
-router.delete('/:id', deleteTalent);
-
-// Update talent profile (specific endpoint)
-router.put('/:id/profile', updateProfile);
+// Route pour supprimer le profil du talent
+router.delete('/deleteTalentProfile/:id', deleteTalentProfile);
 
 export default router;

@@ -29,7 +29,7 @@ export const sendPasswordResetEmail = async (user) => {
     secure: false,
     auth: {
       user: 'riadhlabidi690@gmail.com', // Remplacez par votre adresse email
-      pass: 'riadh12345', // Remplacez par votre mot de passe
+      pass: 'agaircenbntrfzfn', // Remplacez par votre mot de passe
     }
   });
 
@@ -82,13 +82,13 @@ export const login = async (req, res) => {
     // Vérifier si l'utilisateur existe
     const user = await User.findOne({ email });
     if (!user) {
-      throw createError(401, 'Email invalides');
+      throw createError(401, 'Email invalide');
     }
 
     // Vérifier le mot de passe
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      throw createError(401, 'Password invalides');
+      throw createError(401, 'Mot de passe invalide');
     }
 
     // Générer un token d'authentification
@@ -102,6 +102,7 @@ export const login = async (req, res) => {
     res.status(error.statusCode || 500).json({ message: error.message || 'Une erreur est survenue lors de la connexion' });
   }
 };
+
 
 
 export const register = async (req, res) => {
