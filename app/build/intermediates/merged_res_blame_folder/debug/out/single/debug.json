@@ -28,6 +28,10 @@
         "source": "com.example.talentahub.app-main-34:/mipmap-anydpi-v26/ic_launcher.xml"
     },
     {
+        "merged": "com.example.talentahub.app-merged_res-32:/layout_filter_project.xml.flat",
+        "source": "com.example.talentahub.app-main-34:/layout/filter_project.xml"
+    },
+    {
         "merged": "com.example.talentahub.app-merged_res-32:/drawable_button_backround.xml.flat",
         "source": "com.example.talentahub.app-main-34:/drawable/button_backround.xml"
     },
@@ -56,16 +60,16 @@
         "source": "com.example.talentahub.app-main-34:/mipmap-mdpi/ic_launcher.webp"
     },
     {
+        "merged": "com.example.talentahub.app-merged_res-32:/layout_item_project.xml.flat",
+        "source": "com.example.talentahub.app-main-34:/layout/item_project.xml"
+    },
+    {
         "merged": "com.example.talentahub.app-merged_res-32:/mipmap-xxxhdpi_ic_launcher.webp.flat",
         "source": "com.example.talentahub.app-main-34:/mipmap-xxxhdpi/ic_launcher.webp"
     },
     {
         "merged": "com.example.talentahub.app-merged_res-32:/mipmap-xxhdpi_ic_launcher.webp.flat",
         "source": "com.example.talentahub.app-main-34:/mipmap-xxhdpi/ic_launcher.webp"
-    },
-    {
-        "merged": "com.example.talentahub.app-merged_res-32:/layout_item_event.xml.flat",
-        "source": "com.example.talentahub.app-main-34:/layout/item_event.xml"
     },
     {
         "merged": "com.example.talentahub.app-merged_res-32:/xml_backup_rules.xml.flat",
@@ -82,10 +86,6 @@
     {
         "merged": "com.example.talentahub.app-merged_res-32:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
         "source": "com.example.talentahub.app-main-34:/mipmap-xxxhdpi/ic_launcher_round.webp"
-    },
-    {
-        "merged": "com.example.talentahub.app-merged_res-32:/layout_filter_event.xml.flat",
-        "source": "com.example.talentahub.app-main-34:/layout/filter_event.xml"
     },
     {
         "merged": "com.example.talentahub.app-merged_res-32:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
