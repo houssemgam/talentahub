@@ -1,76 +1,40 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const morgan = require('morgan');
-const bodyParser = require('body-parser');
-
-const ProjectRoute = require('./routes/project');
-mongoose.connect('mongodb://localhost:27017/testing');
-const db = mongoose.connection;
-const multer = require('multer');
+import express from 'express'
+import mongoose from 'mongoose'
+import morgan from 'morgan'
+import cors from 'cors'
+import { errorHandler, notFoundError } from './Middlewares/error-handler.js'
+import talentRoutes from './routes/talentRoutes.js'
 
 
-db.on('error', (err) => {
-   console.log(err);
-});
+const app = express()
+const port = 9090
+const dbName = "talenthubdb"
+const db_url = `mongodb://127.0.0.1:27017`
 
-db.once('open', () => {
-   console.log('Database Connection Established!');
-});
+app.use(morgan('dev'))
+app.use(cors())
+app.use(express.json())
+app.use(express.urlencoded({ extended: true })) // to read req body ( x www form urlencoded )
+app.use('/img', express.static("public/images")) // static directory for files
 
-const app = express();
-app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use('/uploads', express.static('uploads'))
+app.use('/talent', talentRoutes)
 
-const PORT = process.env.PORT || 9090;
+app.use(notFoundError)
+app.use(errorHandler)
 
-app.listen(PORT, () => {
-   console.log(`Server is running on port ${PORT}`);
-});
-
-app.use('/api/projects', ProjectRoute);
-const server = require("http").createServer(app);
-const io = require("socket.io")(server, {
-  cors: {
-    origin: "*",
-  },
-});
-
-// socket Router
-const socketRouter = require("./routes/socketRouter")(io);
-
-app.use("/api/v1", socketRouter);
-
-app.set("view engine", "ejs");
-
-app.set(express.urlencoded({ extended: false }));
-
-app.set(express.json());
-
-// landing
-app.get("/", (req, res) => {
-  res.render("index");
-});
-
-// socket connection
-io.on("connection", (socket) => {
-  console.log(socket.id);
-});
-
-server.listen(3001, () => {
-  console.log("server is running");
-});
+mongoose.set('debug', true) // log queries
+mongoose.set('strictQuery', true);
+mongoose.Promise = global.Promise
+mongoose.connect(`${db_url}/${dbName}`)
+    .then(() => {
+        console.log(`Connected to ${dbName}`);
+    }).catch(err => {
+        console.log(err)
+    })
 
 
-io.on("connection", (socket) => {
-  console.log(socket.id);
+// list to server 
+app.listen(port, () => {
+    console.log(`server running at http://localhost:${port}`)
+})
 
-  socket.on("mod_forecast", (count) => {
-    // Handle the mod_forecast event here
-    console.log(`Received mod_forecast event with count: ${count}`);
-
-    // Emit the mod_forecast event
-    io.emit("mod_forecast", count);
-  });
-});
