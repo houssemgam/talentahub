@@ -4,7 +4,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
 const ProjectRoute = require('./routes/project');
-mongoose.connect('mongodb://localhost:27017/testing');
+mongoose.connect('mongodb://127.0.0.1:27017/localtest');
 const db = mongoose.connection;
 const multer = require('multer');
 
