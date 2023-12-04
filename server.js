@@ -1,76 +1,74 @@
+// Import dependencies
 const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-
-const ProjectRoute = require('./routes/project');
-mongoose.connect('mongodb://127.0.0.1:27017/localtest');
-const db = mongoose.connection;
+const cors = require('cors');
 const multer = require('multer');
+const http = require('http');
+const io = require('socket.io');
 
 
-db.on('error', (err) => {
-   console.log(err);
-});
+// Import custom middleware and routes
+const { errorHandler, notFoundError } = require('./middleware/error-handler');
+const eventRoutes = require('./routes/eventRoutes');
+const projectRoutes = require('./routes/project');
+const socketRouter = require('./routes/socketRouter');
 
-db.once('open', () => {
-   console.log('Database Connection Established!');
-});
-
+// Initialize app and server
 const app = express();
-app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use('/uploads', express.static('uploads'))
+const server = http.createServer(app);
+const socketServer = io(server, { cors: { origin: '*' } });
 
+// MongoDB connection
+mongoose.connect('mongodb+srv://gammoudihoussem:housam972000@cluster0.thaxeiv.mongodb.net/')
+  .then(() => console.log(`Connected to 'localtest' database`))
+  .catch((err) => console.error(err));
+
+// Global configurations
 const PORT = process.env.PORT || 9090;
 
-app.listen(PORT, () => {
-   console.log(`Server is running on port ${PORT}`);
-});
+// Middleware
+app.use(morgan('dev'));
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-app.use('/api/projects', ProjectRoute);
-const server = require("http").createServer(app);
-const io = require("socket.io")(server, {
-  cors: {
-    origin: "*",
-  },
-});
+// Static file serving
+// Static file serving
+app.use('/uploads', express.static('uploads', { storage: multer.diskStorage({
+    destination: './uploads',
+    filename: (req, file, cb) => {
+      cb(null, new Date().toISOString() + '-' + file.originalname);
+    }
+  }) }));
+  
+  app.use('/img', express.static('public/images'));
+  
 
-// socket Router
-const socketRouter = require("./routes/socketRouter")(io);
+// Routing
+app.use('/api/projects', projectRoutes);
+app.use('/event', eventRoutes);
 
-app.use("/api/v1", socketRouter);
+// Socket.io routes
+app.use('/api/v1', socketRouter(socketServer));
 
-app.set("view engine", "ejs");
+// Error handling
+app.use(notFoundError);
+app.use(errorHandler);
 
-app.set(express.urlencoded({ extended: false }));
-
-app.set(express.json());
-
-// landing
-app.get("/", (req, res) => {
-  res.render("index");
-});
-
-// socket connection
-io.on("connection", (socket) => {
-  console.log(socket.id);
-});
-
-server.listen(3001, () => {
-  console.log("server is running");
-});
-
-
-io.on("connection", (socket) => {
+// Socket events
+socketServer.on('connection', (socket) => {
   console.log(socket.id);
 
-  socket.on("mod_forecast", (count) => {
-    // Handle the mod_forecast event here
+  socket.on('mod_forecast', (count) => {
     console.log(`Received mod_forecast event with count: ${count}`);
-
-    // Emit the mod_forecast event
-    io.emit("mod_forecast", count);
+    socketServer.emit('mod_forecast', count);
   });
 });
+
+// Server startup
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+socketServer.listen(3001, () => console.log('Socket server running on port 3001'));

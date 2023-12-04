@@ -77,11 +77,23 @@ const destroy = async (req, res) => {
         handleServerError(res);
     }
 }
-
+const getAllProjects = async (req, res) => {
+    try {
+      const projects = await Project.find();
+      res.status(200).json({
+        message: 'All projects retrieved successfully',
+        data: projects,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'An error occurred!' });
+    }
+  };
 module.exports = {
     index,
     show,
     store,
     update,
-    destroy
+    destroy,
+    getAllProjects
 };
